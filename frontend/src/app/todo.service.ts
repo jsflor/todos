@@ -1,42 +1,44 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface Todo {
   id: number;
   title: string;
   description: string;
   completed: boolean;
+  userId?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-  private todos: Todo[] = [
-    { id: 1, title: 'Buy groceries', description: 'Milk, eggs, bread', completed: false },
-    { id: 2, title: 'Do laundry', description: 'Wash clothes', completed: true }
-  ];
+  private apiUrl = 'https://jsonplaceholder.typicode.com/todos';
 
-  getTodos(): Todo[] {
-    return this.todos;
+  constructor(private http: HttpClient) {}
+
+  getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(`${this.apiUrl}?_limit=10`);
   }
 
-  getTodo(id: number): Todo | undefined {
-    return this.todos.find(todo => todo.id === id);
+  getTodo(id: number): Observable<Todo> {
+    return this.http.get<Todo>(`${this.apiUrl}/${id}`);
   }
 
-  addTodo(todo: Omit<Todo, 'id'>): void {
-    const newId = Math.max(...this.todos.map(t => t.id), 0) + 1;
-    this.todos.push({ id: newId, ...todo });
+  addTodo(todo: Omit<Todo, 'id'>): Observable<Todo> {
+    return this.http.post<Todo>(this.apiUrl, {
+      title: todo.title,
+      completed: todo.completed,
+      userId: 1
+    });
   }
 
-  updateTodo(updatedTodo: Todo): void {
-    const index = this.todos.findIndex(todo => todo.id === updatedTodo.id);
-    if (index !== -1) {
-      this.todos[index] = updatedTodo;
-    }
+  updateTodo(todo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, todo);
   }
 
-  deleteTodo(id: number): void {
-    this.todos = this.todos.filter(todo => todo.id !== id);
+  deleteTodo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

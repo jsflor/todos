@@ -12,6 +12,9 @@ import { Todo } from '../todo.service';
 })
 export class HomeComponent {
   todos: Todo[] = [];
+  loading = true;
+  error = '';
+
   newTodoTitle = '';
   newTodoDescription = '';
 
@@ -19,13 +22,25 @@ export class HomeComponent {
     private todoService: TodoService,
     private authService: AuthService,
     private router: Router
-  ) {
-    this.todos = this.todoService.getTodos();
+  ) {}
+
+  ngOnInit(): void {
+    this.loadTodos();
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  loadTodos(): void {
+    this.loading = true;
+    this.error = '';
+    this.todoService.getTodos().subscribe({
+      next: (todos) => {
+        this.todos = todos;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load todos';
+        this.loading = false;
+      }
+    });
   }
 
   addTodo(): void {
@@ -34,19 +49,41 @@ export class HomeComponent {
         title: this.newTodoTitle,
         description: this.newTodoDescription,
         completed: false
+      }).subscribe({
+        next: (newTodo) => {
+          this.todos.unshift(newTodo);
+          this.newTodoTitle = '';
+          this.newTodoDescription = '';
+        },
+        error: () => {
+          this.error = 'Failed to add todo';
+        }
       });
-      this.todos = this.todoService.getTodos();
-      this.newTodoTitle = '';
-      this.newTodoDescription = '';
     }
+  }
+
+  deleteTodo(id: number, event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+    
+    this.todoService.deleteTodo(id).subscribe(() => {
+      this.todos = this.todos.filter(t => t.id !== id);
+    });
   }
 
   toggleComplete(todo: Todo, event?: Event): void {
     if (event) {
       event.stopPropagation();
     }
-    todo.completed = !todo.completed;
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo({
+      ...todo,
+      completed: !todo.completed
+    })
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   viewDetail(id: number): void {

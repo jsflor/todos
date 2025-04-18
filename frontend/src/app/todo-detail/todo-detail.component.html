@@ -1,3 +1,9 @@
+<div *ngIf="isLoading">Loading todo details...</div>
+
+<div *ngIf="!isLoading && !todo" class="error">
+  Todo not found!
+</div>
+
 <div class="detail-container" *ngIf="todo">
     <h2>{{ todo.title }}</h2>
     <p>{{ todo.description }}</p>

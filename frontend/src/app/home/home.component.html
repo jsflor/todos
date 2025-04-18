@@ -4,16 +4,24 @@
       <button (click)="logout()">Logout</button>
     </header>
   
-    <div class="add-todo">
+    <div *ngIf="!loading" class="add-todo">
       <input [(ngModel)]="newTodoTitle" placeholder="Title" (keyup.enter)="addTodo()">
       <input [(ngModel)]="newTodoDescription" placeholder="Description" (keyup.enter)="addTodo()">
       <button (click)="addTodo()">Add Todo</button>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading todos...</div>
+    <div *ngIf="!loading && todos.length === 0" class="empty-state">
+      No todos found. Add one above!
     </div>
   
     <ul class="todo-list">
       <li *ngFor="let todo of todos" (click)="viewDetail(todo.id)">
         <input type="checkbox" [checked]="todo.completed" (change)="toggleComplete(todo, $event)" (click)="$event.stopPropagation()">
         <span [class.completed]="todo.completed">{{ todo.title }}</span>
+        <button 
+        class="delete-btn"
+        (click)="deleteTodo(todo.id, $event)">×</button>
       </li>
     </ul>
 </div>

@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class TodoDetailComponent {
   todo: Todo | undefined;
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,11 +19,11 @@ export class TodoDetailComponent {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.todo = this.todoService.getTodo(id);
-    if (!this.todo) {
-      this.router.navigate(['/home']);
-    }
+    const id = +this.route.snapshot.paramMap.get('id')!;
+    this.todoService.getTodo(id).subscribe(todo => {
+      this.todo = todo;
+      this.isLoading = false;
+    });
   }
 
   goBack(): void {

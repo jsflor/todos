@@ -1,0 +1,108 @@
+/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Auth Styles */
+  .auth-container {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 400px;
+    margin: 50px auto;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error {
+    color: red;
+  }
+  
+  /* Todo Styles */
+  .todo-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-todo {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .add-todo input {
+    flex: 1;
+    padding: 8px;
+  }
+  
+  .todo-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .todo-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .todo-list li:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .todo-list input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .completed {
+    text-decoration: line-through;
+    color: #888;
+  }
+  
+  /* Detail View */
+  .detail-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }

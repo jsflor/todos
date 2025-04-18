@@ -1,0 +1,6 @@
+<div class="detail-container" *ngIf="todo">
+    <h2>{{ todo.title }}</h2>
+    <p>{{ todo.description }}</p>
+    <p>Status: {{ todo.completed ? 'Completed' : 'Pending' }}</p>
+    <button (click)="goBack()">Back to List</button>
+</div>

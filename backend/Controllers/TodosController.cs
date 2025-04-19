@@ -1,14 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace TodoApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class TodosController : ControllerBase
 {
     private readonly TodoContext _context;
+    private int GetUserId() => int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
     public TodosController(TodoContext context)
     {
@@ -19,7 +24,9 @@ public class TodosController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
     {
-        return await _context.Todos.ToListAsync();
+        return await _context.Todos
+            .Where(t => t.UserId == GetUserId())
+            .ToListAsync();
     }
 
     // GET: api/Todos/5
@@ -40,6 +47,7 @@ public class TodosController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Todo>> PostTodo(Todo todo)
     {
+        todo.UserId = GetUserId();
         _context.Todos.Add(todo);
         await _context.SaveChangesAsync();
 

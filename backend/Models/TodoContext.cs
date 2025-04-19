@@ -10,4 +10,6 @@ public class TodoContext : DbContext
     }
 
     public DbSet<Todo> Todos { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+
 }

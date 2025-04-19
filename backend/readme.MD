@@ -42,3 +42,19 @@ connect and initialize db
 ```bash
     dotnet ef database update
 ```
+
+## check applied migrations
+
+```bash
+    dotnet ef migrations list
+```
+
+## revert migrations
+
+```bash
+    # Revert the last migration
+    dotnet ef database update PreviousMigrationName
+
+    # Or to remove the last migration entirely
+    dotnet ef migrations remove
+```

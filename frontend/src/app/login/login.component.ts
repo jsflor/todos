@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -9,17 +10,42 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email = 'test@test.com';
-  password = 'password';
-  error = '';
+  loginForm: FormGroup;
+  errorMessage = '';
+  isLoading = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
 
-  login(): void {
-    if (this.authService.login(this.email, this.password)) {
-      this.router.navigate(['/home']);
-    } else {
-      this.error = 'Invalid credentials';
+  onSubmit() {
+    if (this.loginForm.invalid) {
+      return;
     }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Login failed';
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 }

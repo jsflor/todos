@@ -51,7 +51,7 @@ export class HomeComponent {
         completed: false
       }).subscribe({
         next: (newTodo) => {
-          this.todos.unshift(newTodo);
+          this.todos.push(newTodo);
           this.newTodoTitle = '';
           this.newTodoDescription = '';
         },
@@ -75,10 +75,13 @@ export class HomeComponent {
     if (event) {
       event.stopPropagation();
     }
-    this.todoService.updateTodo({
+    const newTodo = {
       ...todo,
       completed: !todo.completed
-    })
+    }
+    this.todoService.updateTodo(newTodo).subscribe(() => {
+      this.todos = this.todos.map(t => t.id === newTodo.id ? newTodo : t);
+    });
   }
 
   logout(): void {

@@ -14,12 +14,12 @@ export interface Todo {
   providedIn: 'root'
 })
 export class TodoService {
-  private apiUrl = 'https://jsonplaceholder.typicode.com/todos';
+  private apiUrl = 'http://localhost:5248/api/todos';
 
   constructor(private http: HttpClient) {}
 
   getTodos(): Observable<Todo[]> {
-    return this.http.get<Todo[]>(`${this.apiUrl}?_limit=10`);
+    return this.http.get<Todo[]>(`${this.apiUrl}`);
   }
 
   getTodo(id: number): Observable<Todo> {
@@ -29,6 +29,7 @@ export class TodoService {
   addTodo(todo: Omit<Todo, 'id'>): Observable<Todo> {
     return this.http.post<Todo>(this.apiUrl, {
       title: todo.title,
+      description: todo.description,
       completed: todo.completed,
       userId: 1
     });
